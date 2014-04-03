@@ -111,7 +111,7 @@ the specific language governing permissions and limitations under the Apache Lic
         return;
     }
 
-    var KEY, AbstractSelect2, SingleSelect2, MultiSelect2, nextUid, sizer,
+    var KEY, AbstractSelect2, SingleSelect2, MultiSelect2, Combobox, nextUid, sizer,
         lastMousePosition={x:0,y:0}, $document, scrollBarDimensions,
 
     KEY = {
@@ -2321,7 +2321,8 @@ the specific language governing permissions and limitations under the Apache Lic
                 }
             }
 
-            return this._super.apply(this, arguments);
+            this._super.apply(this, arguments);
+            //return this.parent.getPlaceholder.apply(this, arguments); //TODO ca
         },
 
         // single
@@ -3301,6 +3302,47 @@ the specific language governing permissions and limitations under the Apache Lic
         }
     });
 
+    Combobox = MultiSelect2.extend({
+        initContainer: function(){
+            this._super.apply(this, arguments);
+            this.search.on("input paste", this.bind(function() {
+                this.setVal(this.search.val());
+            }));
+        },
+        clearSearch: function () {
+
+        },
+        onSelect: function (data, options) {
+
+            if (!this.triggerSelect(data)) { return; }
+
+            this.addSelectedChoice(data);
+
+            this.opts.element.trigger({ type: "selected", val: this.id(data), choice: data });
+
+            if (this.select || !this.opts.closeOnSelect) this.postprocessResults(data, false, this.opts.closeOnSelect===true);
+
+            if (this.opts.closeOnSelect) {
+                this.close();
+            }
+
+            // since its not possible to select an element that has already been
+            // added we do not need to check if this is a new element before firing change
+            this.triggerChange({ added: data });
+        },
+        addSelectedChoice: function (data) {
+            this.setVal(data.text);
+            this.search.val(data.text);
+        },
+        setVal: function (val) {
+            if (this.select) {
+                this.select.val(val);
+            } else {
+                this.opts.element.val(val);
+            }
+        }
+    });
+
     $.fn.select2 = function () {
 
         var args = Array.prototype.slice.call(arguments, 0),
@@ -3316,6 +3358,11 @@ the specific language governing permissions and limitations under the Apache Lic
             if (args.length === 0 || typeof(args[0]) === "object") {
                 opts = args.length === 0 ? {} : $.extend({}, args[0]);
                 opts.element = $(this);
+
+                if(opts.combobox){
+                    new window.Select2["class"].combobox(opts);
+                    return;
+                }
 
                 if (opts.element.get(0).tagName.toLowerCase() === "select") {
                     multiple = opts.element.prop("multiple");
@@ -3439,7 +3486,8 @@ the specific language governing permissions and limitations under the Apache Lic
         }, "class": {
             "abstract": AbstractSelect2,
             "single": SingleSelect2,
-            "multi": MultiSelect2
+            "multi": MultiSelect2,
+            "combobox": Combobox
         }
     };
 
