@@ -2322,7 +2322,6 @@ the specific language governing permissions and limitations under the Apache Lic
             }
 
             this._super.apply(this, arguments);
-            //return this.parent.getPlaceholder.apply(this, arguments); //TODO ca
         },
 
         // single
