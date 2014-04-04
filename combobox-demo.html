@@ -8,47 +8,39 @@
 
     <script>
         var data = {
-              results: [
-                  { id: 1, text: "I'm selectable" },
-                  { id: 2, text: "I'm a disabled option", disabled: true },
-                  { id: 3, text: "I'm selectable too!" }
-              ]
-          };
+          results: [
+            { id: 1, text: "I'm selectable" },
+            { id: 2, text: "I'm a disabled option", disabled: true },
+            { id: 3, text: "I'm selectable too!" }
+          ]
+        };
 
         $(function () {
-            $("#e1").select2({
-                data: data,
-                combobox: true
-            });
+          $("#e1").select2({
+            data: data,
+            combobox: true
+          }).on("change", function(e){
+              $(".first").text("val: " + e.val);
+          });
 
-             $("#e2").select2({
-                tags:['a','aa', 'aadd', 'aaa', 'aaaa', 'aaaaaa', 'bbaa', 'zzz'],
-                combobox: true
-            });
+          $("#e2").select2({
+            tags:['a','aa', 'aadd', 'aaa', 'aaaa', 'aaaaaa', 'bbaa', 'zzz'],
+            combobox: true
+          }).on("change", function(e){
+              $(".second").text("val: " + e.val);
+          });
         });
+
     </script>
 </head>
 <body>
 
 <h2>data</h2>
-<input type="hidden" id="e1" style="width:300px" value=""/><br><br><br>
-source:<br>
-<textarea style="height:100px;width:400px;">
-    $("#e1").select2({
-        data: data,
-        combobox: true
-    });
-</textarea>
-
+<input type="hidden" id="e1" style="width:300px" value=""/><br><br>
+<span class="first">input value</span>
 <h2>tags</h2>
-<input type="hidden" id="e2" style="width:300px" value=""/><br><br><br>
-source:<br>
-<textarea style="height:100px;width:400px;">
-    $("#e2").select2({
-        tags:['a','aa', 'aadd', 'aaa', 'aaaa', 'aaaaaa', 'bbaa', 'zzz'],
-        combobox: true
-    });
-</textarea>
+<input type="hidden" id="e2" style="width:300px" value=""/><br><br>
+<span class="second">input value</span>
 
 </body>
 </html>
