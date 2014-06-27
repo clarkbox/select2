@@ -3334,7 +3334,7 @@ the specific language governing permissions and limitations under the Apache Lic
             this.triggerChange({ added: data });
         },
         addSelectedChoice: function (data) {
-            this.setVal(data.text);
+            this.setVal(data.id);
             this.search.val(data.text);
         },
         setVal: function (val) {
